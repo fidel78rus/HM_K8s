@@ -1,0 +1,24 @@
+apiVersion: apps/v1 #версия API
+kind: Deployment #тип объекта
+metadata:
+  name: netology-ml #задаем имя развертывания
+  labels:
+    app: tomcat
+spec:
+  replicas: 2 #количество реплик (подов)
+  selector:
+    matchLabels:
+      app: tomcat #управляются все поды с меткой app: tomcat
+  strategy:
+    type: RollingUpdate #в принципе, это значение по умолчанию, но указание приветствуется
+  template: #определяется шаблон для создания подов
+    metadata:
+      labels:
+        app: tomcat #метка, которую будет иметь каждый под, созданный этим Deployment
+    spec:
+      containers: #Описывает контейнеры внутри пода
+        - name: tomcat-app
+          image: tomcat:8.5.69-jdk8-openjdk #Используемый образ Docker c конкретной версия Tomcat, как и требовалось.
+          ports:
+            - containerPort: 8080 #определяет порт внутри контейнера для доступа к серверу Tomcat
+              protocol: TCP
